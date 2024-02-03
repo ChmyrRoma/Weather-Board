@@ -1,0 +1,124 @@
+.card {
+  margin-top: 30px;
+  padding: 10px;
+  margin-left: 25px;
+  width: 350px;
+  height: 257px;
+  background: #FFFAF1 0% 0% no-repeat padding-box;
+  box-shadow: 0 3px 6px #00000029;
+  border-radius: 5px;
+  opacity: 1;
+
+  &_cold {
+    background: #F1F2FF 0% 0% no-repeat padding-box;
+  }
+
+  &__deleteButton {
+    float: right;
+    color: #C5C5C5;
+    width: 15px;
+    height: 15px;
+    &:hover {
+      cursor: pointer;
+      opacity: 0.8;
+    }
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &_title {
+      text-align: left;
+      font-weight: normal;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    &_description {
+      display: flex;
+      align-items: center;
+      color: #C5C5C5;
+
+      &_icon {
+        height: 30px;
+        width: 30px;
+        margin-right: 9px;
+      }
+    }
+  }
+
+  &__date {
+    height: 26px;
+    text-align: left;
+    font-weight: 300;
+    font-size: 18px;
+    color: #000000;
+    opacity: 1;
+  }
+
+  &__schedule {
+    margin-top: 7px;
+    opacity: 0.3;
+  }
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__left {
+    display: flex;
+    height: 70px;
+
+    &_numb {
+      font-weight: 600;
+      font-size: 32px;
+      width: 45px;
+    }
+
+    &_gradus {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-left: 5px;
+
+      p {
+        font-size: 22px;
+        font-weight: 400;
+      }
+    }
+
+    &_gradues {
+      &_disabled {
+        color: #8D8D8D;
+      }
+      &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+      }
+    }
+
+    &_line {
+      margin: 0 7px;
+      height: 23px;
+      border: 0.5px solid #707070;
+    }
+  }
+
+  &__right {
+    height: 40px;
+    margin-top: 10px;
+
+    p {
+      font-size: 13px;
+    }
+    &_wind {
+      color: #FFA25B;
+    }
+    &_cold {
+      color: #459DE9;
+    }
+  }
+}

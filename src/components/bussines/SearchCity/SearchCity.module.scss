@@ -1,0 +1,36 @@
+.searchCity {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__input {
+    width: 550px;
+    height: 35px;
+    border-radius: 8px;
+    border: 1px solid #f2f2f2;
+    box-shadow: 1px 4px 10px #d1cdcd;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__button {
+    width: 100px;
+    height: 40px;
+    margin-left: 10px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    background-color: #459dea;
+
+    &:hover {
+      cursor: pointer;
+      opacity: 0.9;
+    }
+
+    &:active {
+      box-shadow: inset 4px 4px 10px 4px #3a8cd1;
+    }
+  }
+}
