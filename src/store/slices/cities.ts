@@ -6,6 +6,7 @@ import {
   setCityWeatherByName,
   removeCityByName,
   setCitiesName,
+  ICityT,
 } from '../reducers/cities';
 import { localStorageHelper } from '../../helpers/localStorageHelper';
 import { ICity } from '../../types/cities/cities.ts';
@@ -31,10 +32,10 @@ export const setCityNameSlice = createAsyncThunk(
   },
 )
 
-export const setCitiesNameSlice = createAsyncThunk<string, string[], AsyncThunkConfig>(
+export const setCitiesNameSlice = createAsyncThunk<string, ICityT[], AsyncThunkConfig>(
   'setCitiesNameSlice',
-  async (citiesName: string[], thunkAPI) => {
-    return thunkAPI.dispatch(setCitiesName(citiesName))
+  async (data: ICityT[], thunkAPI) => {
+    return thunkAPI.dispatch(setCitiesName(data))
   }
 )
 

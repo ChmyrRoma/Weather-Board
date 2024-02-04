@@ -2,10 +2,21 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IWeatherForecast } from '../../types/cities/cities';
 import { localStorageHelper } from '../../helpers/localStorageHelper';
 
+export type TTemperatureModeTypes = 'celsius' | 'fahrenheit';
+
+const defaultTemperatureMode = 'celsius';
+
+
 export interface ICitiesWithWeather {
   name: string,
   weather: IWeatherForecast | null,
+  temperatureMode: TTemperatureModeTypes
   isCityFromMyLocation?: boolean,
+}
+
+export interface ICityT {
+  name: string,
+  temperatureMode: TTemperatureModeTypes
 }
 
 export interface ICitiesSlice {
@@ -23,7 +34,8 @@ export const citiesSlice = createSlice({
     setCityName: (state, action: PayloadAction<{name: string, isCityFromMyLocation?: boolean}>) => {
       const newCity: ICitiesWithWeather = {
         name: action.payload.name,
-        weather: null
+        weather: null,
+        temperatureMode: defaultTemperatureMode,
       };
 
       if (action.payload.isCityFromMyLocation) {
@@ -33,12 +45,12 @@ export const citiesSlice = createSlice({
 
       state.citiesWithWeather = action.payload.isCityFromMyLocation ? [newCity, ...state.citiesWithWeather] :[...state.citiesWithWeather, newCity]
     },
-    // payload: string[] - string = cityName
-    setCitiesName: (state, action: PayloadAction<string[]>) => {
-      const newCities = action.payload.map((cityName) => {
+    setCitiesName: (state, action: PayloadAction<ICityT[]>) => {
+      const newCities = action.payload.map((item) => {
         const newCity: ICitiesWithWeather = {
-          name: cityName,
-          weather: null
+          name: item.name,
+          temperatureMode: item.temperatureMode,
+          weather: null,
         };
 
         return newCity;

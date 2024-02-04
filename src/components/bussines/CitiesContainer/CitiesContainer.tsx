@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { getLocationCitySlice, setCitiesNameSlice, setCityNameSlice } from '../../../store/slices/cities.ts';
@@ -12,6 +13,8 @@ import styles from './CititesContainer.module.scss';
 const CitiesContainer: React.FC = () => {
   const { citiesWithWeather } = useAppSelector(state => state.cities);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation()
+
   const [userLocation, setUserLocation] = useState<{ latitude: number, longitude: number } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,14 +50,14 @@ const CitiesContainer: React.FC = () => {
 
         const response = await dispatch(getLocationCitySlice(coordinates));
         const name = `${response.payload.address.city}, ${response.payload.address.country_code.toUpperCase()}`;
-        const previousCity = cities.find(city => city === name);
+        const previousCity = cities.find(city => city.name === name);
         if (response.payload) {
           if (!previousCity) {
             dispatch(setCityNameSlice({ name, isCityFromMyLocation: true }));
           }
-          }
-            setIsLoading(false)
-        })(userLocation.latitude, userLocation.longitude)
+        }
+        setIsLoading(false)
+      })(userLocation.latitude, userLocation.longitude)
     }
   }, [userLocation])
 
@@ -62,11 +65,13 @@ const CitiesContainer: React.FC = () => {
   useEffect(() => {
     const cities = localStorageHelper.getCities();
     if (cities) {
-      const test = localStorageHelper.getIsCityFromMyLocation();
-      const index = cities.indexOf(test)
-      if (index !== -1) {
-        const removedItem = cities.splice(index, 1)[0];
-        cities.unshift(removedItem);
+      const cityFromMyLocation = localStorageHelper.getIsCityFromMyLocation();
+      if (cityFromMyLocation) {
+        const index = cities.findIndex(obj => obj.name === cityFromMyLocation);
+        if (index !== -1) {
+          const removedItem = cities.splice(index, 1)[0];
+          cities.unshift(removedItem);
+        }
       }
 
       dispatch(setCitiesNameSlice(cities));
@@ -84,7 +89,12 @@ const CitiesContainer: React.FC = () => {
           <div key={index}>
             <CityCard name={el.name} />
           </div>
-        )) : 'No cities']
+        )) : (
+          <div key="empty-message" className={styles.citiesContainer__message}>
+            <h2 className={styles.citiesContainer__message_title}>{t('message_title')}</h2>
+            <p className={styles.citiesContainer__message_description}>{t('message_description')}</p>
+          </div>
+        )]
       )}
     </div>
   )

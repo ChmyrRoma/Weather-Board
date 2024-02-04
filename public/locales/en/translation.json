@@ -6,5 +6,7 @@
     "wind": "Wind",
     "humidity": "Humidity",
     "pressure": "Pressure"
-  }
+  },
+  "message_title": "Add first city",
+  "message_description": "Turn on geolocation if it is turned off"
 }

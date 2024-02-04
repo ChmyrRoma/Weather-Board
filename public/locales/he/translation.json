@@ -6,5 +6,7 @@
     "wind": "רוּחַ",
     "humidity": "לחות",
     "pressure": "לַחַץ"
-  }
+  },
+  "message_title": "הוסף עיר ראשונה",
+  "message_description": "הפעל את המיקום הגיאוגרפי אם הוא כבוי"
 }

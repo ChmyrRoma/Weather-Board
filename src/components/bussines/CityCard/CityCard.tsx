@@ -40,7 +40,7 @@ const CityCard: React.FC<IProps> = ({ name }) => {
   const { citiesWithWeather } = useAppSelector(state => state.cities)
   const dispatch = useAppDispatch();
 
-  const [temperatureMode, setTemperatureMode] = useState<TTemperatureModeTypes>(localStorageHelper.getTemperature() || 'celsius');
+  const [temperatureMode, setTemperatureMode] = useState<TTemperatureModeTypes>(localStorageHelper.getCityTemperatureModeByName(name) || 'celsius');
   const [timeAdded] = useState(moment())
   const [weatherIcon, setWeatherIcon] = useState(null)
 
@@ -133,7 +133,8 @@ const CityCard: React.FC<IProps> = ({ name }) => {
 
   const handleTemperatureMode = (tempMode: TTemperatureModeTypes) => {
     setTemperatureMode(tempMode)
-    localStorageHelper.setTemperature(tempMode)
+    if (!currentCity?.name) return
+    localStorageHelper.setCityTemperatureModeByName(currentCity.name, tempMode)
   }
 
   if (!currentCity || !currentCity?.weather || !closestDate) return null
@@ -152,40 +153,40 @@ const CityCard: React.FC<IProps> = ({ name }) => {
           <p>{closestDate.weather[0].main}</p>
         </div>
       </div>
-        <div className={styles.card__date}>{formattedTimeAdded}</div>
-        <div className={styles.card__schedule}>
-          <WeatherChart data={convertedGraphValue} acceptableTemp={acceptableTemp} temperatureMode={temperatureMode} />
-        </div>
-        <div className={styles.card__content}>
-          <div className={styles.card__left}>
-            <p className={styles.card__left_numb}>{getCalculatedTemperature(closestDate.main.temp)}</p>
-            <div className={styles.card__left_gradus}>
-              <p
-                className={classNames(styles.card__left_gradues,
-                  {[styles.card__left_gradues_disabled]: temperatureMode === 'fahrenheit'}
-                )}
-                onClick={() => handleTemperatureMode("celsius")}
-              >
-                °C
-              </p>
-              <hr className={styles.card__left_line} />
-              <p
-                className={classNames(styles.card__left_gradues,
-                  {[styles.card__left_gradues_disabled]: temperatureMode === 'celsius'}
-                )}
-                onClick={() => handleTemperatureMode("fahrenheit")}
-              >
-                °F
-              </p>
-            </div>
-          </div>
-          <div className={styles.card__right}>
-            <p>{t("card.wind")}: <b className={classNames(styles.card__right_wind, {[styles.card__right_cold]: !acceptableTemp})}>{closestDate.wind.speed} m/s</b></p>
-            <p>{t("card.humidity")}: <b className={classNames(styles.card__right_wind, {[styles.card__right_cold]: !acceptableTemp})}>{closestDate.main.humidity}%</b></p>
-            <p>{t("card.pressure")}: <b className={classNames(styles.card__right_wind, {[styles.card__right_cold]: !acceptableTemp})}>{closestDate.main.pressure}Pa</b></p>
+      <div className={styles.card__date}>{formattedTimeAdded}</div>
+      <div className={styles.card__schedule}>
+        <WeatherChart data={convertedGraphValue} acceptableTemp={acceptableTemp} temperatureMode={temperatureMode} />
+      </div>
+      <div className={styles.card__content}>
+        <div className={styles.card__left}>
+          <p className={styles.card__left_numb}>{getCalculatedTemperature(closestDate.main.temp)}</p>
+          <div className={styles.card__left_gradus}>
+            <p
+              className={classNames(styles.card__left_gradues,
+                {[styles.card__left_gradues_disabled]: temperatureMode === 'fahrenheit'}
+              )}
+              onClick={() => handleTemperatureMode("celsius")}
+            >
+              °C
+            </p>
+            <hr className={styles.card__left_line} />
+            <p
+              className={classNames(styles.card__left_gradues,
+                {[styles.card__left_gradues_disabled]: temperatureMode === 'celsius'}
+              )}
+              onClick={() => handleTemperatureMode("fahrenheit")}
+            >
+              °F
+            </p>
           </div>
         </div>
-        <p style={{ color: '#C5C5C5', fontSize: '13px' }}>{t("card.feels")}: {getCalculatedTemperature(closestDate.main.temp)} {temperatureMode === 'celsius' ? '°C' : '°F'}</p>
+        <div className={styles.card__right}>
+          <p>{t("card.wind")}: <b className={classNames(styles.card__right_wind, {[styles.card__right_cold]: !acceptableTemp})}>{closestDate.wind.speed} m/s</b></p>
+          <p>{t("card.humidity")}: <b className={classNames(styles.card__right_wind, {[styles.card__right_cold]: !acceptableTemp})}>{closestDate.main.humidity}%</b></p>
+          <p>{t("card.pressure")}: <b className={classNames(styles.card__right_wind, {[styles.card__right_cold]: !acceptableTemp})}>{closestDate.main.pressure}Pa</b></p>
+        </div>
+      </div>
+      <p style={{ color: '#C5C5C5', fontSize: '13px' }}>{t("card.feels")}: {getCalculatedTemperature(closestDate.main.temp)} {temperatureMode === 'celsius' ? '°C' : '°F'}</p>
     </div>
   )
 }

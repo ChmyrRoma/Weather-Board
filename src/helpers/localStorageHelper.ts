@@ -1,9 +1,16 @@
+import { TTemperatureModeTypes } from '../store/reducers/cities.ts';
+
+interface IStorageCity {
+  name: string,
+  temperatureMode: TTemperatureModeTypes,
+}
+
 export const localStorageHelper = {
-  getCities: function(): string[] {
+  getCities: function(): IStorageCity[] {
     const citiesJSON = localStorage.getItem('cities');
     return citiesJSON ? JSON.parse(citiesJSON) : [];
   },
-  setCities: function(cities: string[]) {
+  setCities: function(cities: IStorageCity[]) {
     localStorage.setItem('cities', JSON.stringify(cities));
   },
   getLanguage: function() {
@@ -20,12 +27,29 @@ export const localStorageHelper = {
   },
   setCityByName: function(name: string) {
     const cities = this.getCities();
-    if (!cities.includes(name)) {
-      cities.push(name);
+    if (!cities.find(city => city.name === name)) {
+      cities.push({ name, temperatureMode: 'celsius' });
       this.setCities(cities);
     }
   },
-  // isCityFromMyLocation
+  getCityTemperatureModeByName: function(name: string) {
+    const cities = this.getCities();
+    const currentCity = cities.find(city => city.name === name);
+
+    return currentCity?.temperatureMode || null
+  },
+  setCityTemperatureModeByName: function(name: string, temperatureMode: TTemperatureModeTypes) {
+    const cities = this.getCities();
+
+    cities.map(city => {
+      if (city.name === name) {
+        city.temperatureMode = temperatureMode;
+      }
+      return city;
+    })
+
+    this.setCities(cities);
+  },
   setIsCityFromMyLocation: function (name: string) {
     localStorage.setItem('isCityFromMyLocation', name)
   },
@@ -37,7 +61,7 @@ export const localStorageHelper = {
   },
   removeCityByName: function(name: string) {
     let cities = this.getCities();
-    cities = cities.filter(city => city !== name);
+    cities = cities.filter(city => city.name !== name);
     this.setCities(cities);
   },
 };
