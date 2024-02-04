@@ -1,9 +1,11 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IWeatherForecast } from '../../types/cities/cities';
+import { localStorageHelper } from '../../helpers/localStorageHelper';
 
-interface ICitiesWithWeather {
+export interface ICitiesWithWeather {
   name: string,
   weather: IWeatherForecast | null,
+  isCityFromMyLocation?: boolean,
 }
 
 export interface ICitiesSlice {
@@ -18,13 +20,18 @@ export const citiesSlice = createSlice({
   name: 'cities',
   initialState,
   reducers: {
-    setCityName: (state, action: PayloadAction<string>) => {
+    setCityName: (state, action: PayloadAction<{name: string, isCityFromMyLocation?: boolean}>) => {
       const newCity: ICitiesWithWeather = {
-        name: action.payload,
+        name: action.payload.name,
         weather: null
       };
-      
-      state.citiesWithWeather = [...state.citiesWithWeather, newCity]
+
+      if (action.payload.isCityFromMyLocation) {
+        newCity.isCityFromMyLocation = action.payload.isCityFromMyLocation
+        localStorageHelper.setIsCityFromMyLocation(action.payload.name)
+      }
+
+      state.citiesWithWeather = action.payload.isCityFromMyLocation ? [newCity, ...state.citiesWithWeather] :[...state.citiesWithWeather, newCity]
     },
     // payload: string[] - string = cityName
     setCitiesName: (state, action: PayloadAction<string[]>) => {

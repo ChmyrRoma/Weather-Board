@@ -10,11 +10,11 @@ import {
   getWeatherIconSlice,
   removeCityByNameSlice,
 } from '../../../store/slices/cities.ts';
+import { WeatherForecast } from '../../../types/cities/cities.ts';
 import WeatherChart from '../WeatherChart/WeatherChart';
 import { localStorageHelper } from '../../../helpers/localStorageHelper';
 
 import styles from './CityCard.module.scss';
-import {WeatherForecast} from "../../../types/cities/cities.ts";
 
 interface IProps {
   name: string
@@ -48,7 +48,7 @@ const CityCard: React.FC<IProps> = ({ name }) => {
 
 
   useEffect(() => {
-    if (!name) return
+    if (!name) return;
     dispatch(getWeatherByCityName(name))
   }, [name])
 
@@ -57,8 +57,7 @@ const CityCard: React.FC<IProps> = ({ name }) => {
     (async () => {
       if (!closestDate) return;
       const response = await dispatch(getWeatherIconSlice(closestDate?.weather[0]?.icon))
-      // TODO: add types to AsyncThunk and this response
-      if (response.payload) setWeatherIcon(response.payload)
+      if (response.payload) setWeatherIcon(response.payload as string)
     })()
   }, [citiesWithWeather])
 
@@ -77,7 +76,6 @@ const CityCard: React.FC<IProps> = ({ name }) => {
 
     const currentDateTime = new Date();
     weatherForecasts
-      // TODO: fix ts
       .map(dateTime => new Date(dateTime.dt_txt))
       .sort((a, b) => Math.abs(currentDateTime - a) - Math.abs(currentDateTime - b));
 
@@ -89,6 +87,9 @@ const CityCard: React.FC<IProps> = ({ name }) => {
 
   const handleDelete = () => {
     dispatch(removeCityByNameSlice(name))
+    if (currentCity.isCityFromMyLocation) {
+      localStorageHelper.removeIsCityFromMyLocation()
+    }
   }
 
   const convertedGraphValue: IGraphValue = useMemo(() => {
@@ -119,7 +120,7 @@ const CityCard: React.FC<IProps> = ({ name }) => {
       const currentWeatherDay: WeatherForecast[] = weatherByDays[day]
       if (currentWeatherDay) {
         labels.push(moment(currentWeatherDay[0].dt_txt).format('MM.DD'))
-        const temperature = getCalculatedTemperature(currentWeatherDay[0].main?.temp)
+        const temperature = getCalculatedTemperature(currentWeatherDay[0]?.main?.temp)
         temperatures.push(temperature)
       }
     })
@@ -140,8 +141,7 @@ const CityCard: React.FC<IProps> = ({ name }) => {
   return (
     <div className={classNames(styles.card, {[styles.card_cold]: !acceptableTemp})}>
       <div className={styles.card__deleteButton} onClick={handleDelete}>
-        {/* TODO: Check fontSize */}
-        <CloseIcon fontSize="small" />
+        <CloseIcon fontSize="smaller" />
       </div>
       <div className={styles.card__header}>
         <p className={styles.card__header_title}>{currentCity.name}</p>
@@ -154,7 +154,7 @@ const CityCard: React.FC<IProps> = ({ name }) => {
       </div>
         <div className={styles.card__date}>{formattedTimeAdded}</div>
         <div className={styles.card__schedule}>
-          <WeatherChart data={convertedGraphValue} acceptableTemp={acceptableTemp} />
+          <WeatherChart data={convertedGraphValue} acceptableTemp={acceptableTemp} temperatureMode={temperatureMode} />
         </div>
         <div className={styles.card__content}>
           <div className={styles.card__left}>

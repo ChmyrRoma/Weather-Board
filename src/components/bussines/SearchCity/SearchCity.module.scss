@@ -32,5 +32,15 @@
     &:active {
       box-shadow: inset 4px 4px 10px 4px #3a8cd1;
     }
+    &_disabled {
+      background-color: #cccccc;
+      color: #666666;
+
+      &:active, &:hover {
+        cursor: auto;
+        opacity: 1;
+        box-shadow: none;
+      }
+    }
   }
 }

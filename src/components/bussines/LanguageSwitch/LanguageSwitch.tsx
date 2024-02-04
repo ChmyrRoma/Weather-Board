@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import i18next from 'i18next';
 import { Box, Menu, MenuItem } from '@mui/material';
 
+import { localStorageHelper } from '../../../helpers/localStorageHelper';
+
 import LanguageIcon from '@mui/icons-material/Language';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import styles from './LanguageSwitch.module.scss';
-import {localStorageHelper} from "../../../helpers/localStorageHelper";
 
 const LanguageSwitch = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -22,7 +23,7 @@ const LanguageSwitch = () => {
 
   const handleCloses = (language: string) => {
     setOpen(false);
-    localStorageHelper.setLanguage(language)
+    localStorageHelper.setLanguage(language);
     i18next.changeLanguage(language);
   }
 
@@ -49,7 +50,8 @@ const LanguageSwitch = () => {
         onClose={handleClose}
       >
         <MenuItem onClick={() => handleCloses('EN')} sx={{ width: '70px' }}>EN</MenuItem>
-        <MenuItem onClick={() => handleCloses('UK')}>UA</MenuItem>
+        <MenuItem onClick={() => handleCloses('UA')}>UA</MenuItem>
+        <MenuItem onClick={() => handleCloses('HE')}>HE</MenuItem>
       </Menu>
     </Box>
   )

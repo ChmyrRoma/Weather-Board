@@ -25,21 +25,19 @@ export const localStorageHelper = {
       this.setCities(cities);
     }
   },
+  // isCityFromMyLocation
+  setIsCityFromMyLocation: function (name: string) {
+    localStorage.setItem('isCityFromMyLocation', name)
+  },
+  removeIsCityFromMyLocation: function () {
+    localStorage.removeItem('isCityFromMyLocation')
+  },
+  getIsCityFromMyLocation: function () {
+    return localStorage.getItem('isCityFromMyLocation')
+  },
   removeCityByName: function(name: string) {
     let cities = this.getCities();
     cities = cities.filter(city => city !== name);
     this.setCities(cities);
   },
-  clearCities: function() {
-    localStorage.removeItem('cities');
-  },
-  clearLanguage: function() {
-    localStorage.removeItem('language');
-  },
-  clearTemperature: function() {
-    localStorage.removeItem('temperature');
-  },
-  clearAll: function() {
-    localStorage.clear();
-  }
 };

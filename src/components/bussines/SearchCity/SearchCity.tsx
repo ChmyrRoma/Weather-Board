@@ -1,18 +1,25 @@
-import React, {useEffect, useState} from 'react';
-import {Autocomplete, TextField} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Autocomplete, TextField } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import classNames from 'classnames';
 
-import { useAppDispatch } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { getCitiesSlice, setCityNameSlice } from '../../../store/slices/cities.ts';
 import { ICity } from '../../../types/cities/cities';
 import useDebounce from '../../../hooks/useDebounce/useDebounce';
 
 import styles from './SearchCity.module.scss';
 
+
 const SearchCity: React.FC = () => {
   const [selectOption, setSelectOption] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [cities, setCities] = useState<ICity[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { t } = useTranslation()
+
+  const { citiesWithWeather } = useAppSelector(state => state.cities)
 
   const dispatch = useAppDispatch()
 
@@ -23,7 +30,6 @@ const SearchCity: React.FC = () => {
       if (!debouncedInput) return
       setIsLoading(true);
 
-      // TODO: add ts
       const response = await dispatch(getCitiesSlice(searchTerm))
       if (response?.payload) {
         setCities(response.payload);
@@ -34,22 +40,38 @@ const SearchCity: React.FC = () => {
 
   }, [debouncedInput])
 
+
+  useEffect(() => {
+    const checkCity = citiesWithWeather.some(item => item.name === selectOption)
+    if (checkCity) return;
+  }, [citiesWithWeather])
+
+  useEffect(() => {
+    if (selectOption !== searchTerm) {
+      setSelectOption(null)
+    }
+  }, [searchTerm])
+
   const handleAddCity = async () => {
     if (!selectOption) return;
-
-    await dispatch(setCityNameSlice(selectOption));
-    setSelectOption(null);
+    const checkCity = citiesWithWeather.some(item => item.name === selectOption)
+    if (checkCity) return;
+    await dispatch(setCityNameSlice({ name: selectOption }));
     setSearchTerm('');
+    setSelectOption('');
   }
 
   return (
     <div className={styles.searchCity}>
       <Autocomplete
         loading={isLoading}
+        loadingText={t('loading')}
+        clearIcon={false}
         id="combo-box-demo"
-        options={cities.map(city => `${city.name}, ${city.countryCode}`)}
+        options={searchTerm ? cities.map(city => `${city.name}, ${city.countryCode}`) : []}
         freeSolo
-        onChange={(_, value) => value && setSelectOption(value)}
+        value={selectOption}
+        onChange={(_, value) => (value && setSelectOption(value))}
         sx={{ width: 450 }}
         renderInput={(params) => (
           <TextField
@@ -80,8 +102,14 @@ const SearchCity: React.FC = () => {
           />
         )}
       />
-      <button className={styles.searchCity__button} onClick={handleAddCity} disabled={!selectOption}>
-        Add
+      <button
+        className={classNames(styles.searchCity__button, {
+          [styles.searchCity__button_disabled]: !selectOption
+        })}
+        onClick={handleAddCity}
+        disabled={!selectOption}
+      >
+        {t('button')}
       </button>
     </div>
   )

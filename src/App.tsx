@@ -5,6 +5,7 @@ import LanguageSwitch from './components/bussines/LanguageSwitch/LanguageSwitch'
 import SearchCity from './components/bussines/SearchCity/SearchCity';
 import CitiesContainer from './components/bussines/CitiesContainer/CitiesContainer';
 
+import './index.css';
 import './i18n';
 
 const App: React.FC = () => (

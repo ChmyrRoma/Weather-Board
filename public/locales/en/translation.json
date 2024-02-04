@@ -1,4 +1,6 @@
 {
+  "loading": "Loading...",
+  "button": "Add",
   "card": {
     "feels": "Feels like",
     "wind": "Wind",

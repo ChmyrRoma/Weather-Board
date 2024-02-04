@@ -1,9 +1,12 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import { localStorageHelper } from './helpers/localStorageHelper';
+
 import translation_en from '../public/locales/en/translation.json';
-import translation_uk from '../public/locales/uk/translation.json';
-import {localStorageHelper} from "./helpers/localStorageHelper";
+import translation_ua from '../public/locales/ua/translation.json';
+import translation_he from '../public/locales/he/translation.json';
+
 
 
 i18n
@@ -11,10 +14,13 @@ i18n
   .init({
     resources: {
       EN: {
-        translation: translation_en,
+        translation: translation_en
       },
-      UK: {
-        translation: translation_uk,
+      UA: {
+        translation: translation_ua
+      },
+      HE: {
+        translation: translation_he
       }
     },
     lng: localStorageHelper.getLanguage() || 'EN',

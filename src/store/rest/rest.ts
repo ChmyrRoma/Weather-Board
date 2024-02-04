@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_KEY = '76424010431a2a6e434200c510322927'
+const API_KEY = '76424010431a2a6e434200c510322927';
 
 
 const getWeather = (value: string) => {
@@ -8,7 +8,7 @@ const getWeather = (value: string) => {
     .then((data) => data)
     .catch((error) => console.log(error))
 
-  return requestAxios
+  return requestAxios;
 }
 
 const getCities = (value: string) => {
@@ -16,7 +16,7 @@ const getCities = (value: string) => {
     const requestAxios = axios.get(`http://api.geonames.org/searchJSON?username=demoRoma&q=${value}&maxRows=3`)
     .catch((error) => console.log(error))
 
-    return requestAxios
+    return requestAxios;
   }
 }
 
@@ -27,7 +27,7 @@ const getWeatherIconSlice = (iconUrl: string) => {
         console.log(error);
         throw error;
       });
-    return requestAxios
+    return requestAxios;
   }
 }
 
@@ -44,7 +44,7 @@ const getLocationCitySlice = (lat: number, lon: number) => {
     }).then((data) => data)
       .catch((error) => console.log(error))
 
-    return requestAxios
+    return requestAxios;
 }
 
 export const restAPI = {
@@ -52,4 +52,4 @@ export const restAPI = {
   getCities,
   getWeatherIconSlice,
   getLocationCitySlice
-}
+};
